@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
+import { delay, filter } from 'rxjs/operators';
 import MathUtility from '../../helpers/MathUtility';
+import MathValidator from '../../validators/MathValidator';
 
 @Component({
   selector: 'app-equation',
@@ -12,15 +14,8 @@ export class EquationComponent implements OnInit {
     x: new FormControl(MathUtility.RandomNumber()),
     y: new FormControl(MathUtility.RandomNumber()),
     answer: new FormControl('')
-  }, [(form: AbstractControl) => {
-    const {x, y, answer} = form.value;
-    
-    if (x + y === parseInt(answer)) {
-      return null;
-    }
-
-    return { addition: true };
-  }]);
+  }, [ MathValidator.Addition('answer', 'x', 'y')
+  ]);
 
   constructor() { }
 
@@ -31,5 +26,17 @@ export class EquationComponent implements OnInit {
     return this.math.value.y;
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.math.statusChanges
+      .pipe(
+        filter(value => value === 'VALID'), 
+        delay(333))
+      .subscribe((status: string) => {
+        this.math.setValue({
+          x: MathUtility.RandomNumber(),
+          y: MathUtility.RandomNumber(),
+          answer: ''
+        });
+    });
+  }
 }
