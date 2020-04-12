@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import MathUtility from '../../helpers/MathUtility';
 
 @Component({
   selector: 'app-equation',
@@ -8,10 +9,18 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class EquationComponent implements OnInit {
   math = new FormGroup({
-    x: new FormControl(this.randomNumber()),
-    y: new FormControl(this.randomNumber()),
-    answer: new FormControl(''),
-  });
+    x: new FormControl(MathUtility.RandomNumber()),
+    y: new FormControl(MathUtility.RandomNumber()),
+    answer: new FormControl('')
+  }, [(form: AbstractControl) => {
+    const {x, y, answer} = form.value;
+    
+    if (x + y === parseInt(answer)) {
+      return null;
+    }
+
+    return { addition: true };
+  }]);
 
   constructor() { }
 
@@ -23,8 +32,4 @@ export class EquationComponent implements OnInit {
   }
 
   ngOnInit(): void { }
-
-  randomNumber(): Number {
-    return Math.floor(Math.random() * 10);
-  }
 }

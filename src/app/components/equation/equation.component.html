@@ -1,3 +1,8 @@
 <form [formGroup]="math">
-    {{ x }} + {{ y }} = 
+    {{ x }} + {{ y }} = <input formControlName="answer" />
 </form>
+
+<hr />
+<div>Form is valid: {{ math.valid }}</div>
+<div>Form values: {{ math.value | json }}</div>
+<div>Form errors: {{ math.errors | json }}</div>
