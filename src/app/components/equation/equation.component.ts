@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { delay, filter } from 'rxjs/operators';
+import { delay, filter, scan } from 'rxjs/operators';
 import MathUtility from '../../helpers/MathUtility';
 import MathValidator from '../../validators/MathValidator';
 
@@ -10,7 +10,9 @@ import MathValidator from '../../validators/MathValidator';
   styleUrls: ['./equation.component.css']
 })
 export class EquationComponent implements OnInit {
-  math = new FormGroup({
+  secondsPer: number = 0;
+
+  math: FormGroup = new FormGroup({
     x: new FormControl(MathUtility.RandomNumber()),
     y: new FormControl(MathUtility.RandomNumber()),
     answer: new FormControl('')
@@ -30,8 +32,17 @@ export class EquationComponent implements OnInit {
     this.math.statusChanges
       .pipe(
         filter(value => value === 'VALID'), 
-        delay(333))
-      .subscribe((status: string) => {
+        delay(333),
+        scan((accumulator) => {
+          return {
+            total: accumulator.total + 1,
+            start: accumulator.start
+          }
+        }, { total: 0, start: new Date() }))
+      .subscribe(({total, start}) => {
+        this.secondsPer = (
+          new Date().getTime() - start.getTime()
+        ) / total / 1000;
         this.math.setValue({
           x: MathUtility.RandomNumber(),
           y: MathUtility.RandomNumber(),

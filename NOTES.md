@@ -32,3 +32,15 @@
             {{ x }} + {{ y }} = 
         </form>
     ```
+
+    - The Angular way:
+    ```typescript
+        const start: Date = new Date();
+        let solved: number = 0;
+
+        solved ++;
+        this.secondsPer = (
+          new Date().getTime() - start.getTime()
+        ) / solved / 1000;
+
+    ```
