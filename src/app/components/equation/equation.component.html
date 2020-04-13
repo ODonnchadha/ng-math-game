@@ -1,0 +1,12 @@
+<form [formGroup]="math">
+    {{ x }} + {{ y }} = <input appAnswerHighlight formControlName="answer" />
+</form>
+
+<div class="statistics">
+    {{ secondsPer | number: '1.1-3' }}
+</div>
+
+<hr />
+<div>Form is valid: {{ math.valid }}</div>
+<div>Form values: {{ math.value | json }}</div>
+<div>Form errors: {{ math.errors | json }}</div>
