@@ -42,5 +42,10 @@
         this.secondsPer = (
           new Date().getTime() - start.getTime()
         ) / solved / 1000;
+    ```
+    -- We used RxJS.
 
+    - Without a directive. e.g.:
+    ```html
+        <input [ngClass]="{ highlight: (x + y) * .8 > answer }" formControlName="answer">
     ```
